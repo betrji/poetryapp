@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  a.hover-card {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  a.hover-card:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  a.hover-card h2 {
+    color: #be185d; /* text-pink-700 */
+  }
+  
+  a.hover-card p.text-gray-700 {
+    color: #374151; /* text-gray-700 */
+  }
+  
+  a.hover-card p.text-gray-500 {
+    color: #6b7280; /* text-gray-500 */
+  }
+}
