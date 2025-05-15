@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './App.css';
-import PoemList from './components/PoemList';
-import NewPoem from './components/NewPoem';
-import PoemEditor from './components/PoemEditor';
-import CherryBlossoms from './components/CherryBlossoms';
-import './styles/JapaneseTheme.css';
-import PoemViewer from './components/PoemViewer';
-import type { Poem } from './types';
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import './App.css'
+import PoemList from './components/PoemList.tsx'
+import NewPoem from './components/NewPoem.tsx'
+import PoemEditor from './components/PoemEditor.tsx'
+import CherryBlossoms from './components/CherryBlossoms.tsx'
+import './styles/JapaneseTheme.css'
+import PoemViewer from './components/PoemViewer.tsx'
 
 function App() {
   const [poems, setPoems] = useState<Poem[]>([]);
 
+  // Load poems from localStorage on mount
   useEffect(() => {
     const loadPoems = () => {
       try {
@@ -29,10 +29,12 @@ function App() {
 
     loadPoems();
 
+    // Set up an event listener to reload poems when localStorage changes
     window.addEventListener('storage', loadPoems);
     return () => window.removeEventListener('storage', loadPoems);
   }, []);
 
+  // Import Google Fonts
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -66,6 +68,7 @@ function App() {
     }
   };
 
+  // Delete poem at the App level
   const handleDeletePoem = (id: number) => {
     const updatedPoems = poems.filter(poem => poem.id !== id);
     setPoems(updatedPoems);
@@ -76,6 +79,7 @@ function App() {
     }
   };
 
+  // Reorder poems and persist
   const handleReorderPoems = (newOrder: Poem[]) => {
     setPoems(newOrder);
     try {
@@ -105,7 +109,7 @@ function App() {
         </div>
       </div>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App
