@@ -62,8 +62,9 @@ function PoemList({ poems, handleDelete, handleReorder }) {
         {currentOrder.length > 0 ? (
           <div className="grid gap-y-24 gap-x-16 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center mb-16">
             {currentOrder.map((poem, index) => (
-              <div key={poem.id} className="relative group w-full h-full">
+              <div key={`poem-${poem.id}`} className="relative group w-full h-full">
                 <Link
+                  key={`link-${poem.id}`}
                   to={viewMode === 'edit' ? `/new?edit=${poem.id}` : `/poem/${poem.id}`}
                   className={`book-card japanese-border fade-in-delay-${index % 3} cursor-pointer block hover-card mx-auto my-0${draggedIndex === index ? ' dragging' : ''} ${viewMode === 'edit' ? 'edit-mode-card' : 'view-mode-card'}`}
                   style={{ maxWidth: '300px', minWidth: '220px', marginBottom: '3.5rem', opacity: draggedIndex === index ? 0.6 : 1, zIndex: draggedIndex === index ? 10 : 1 }}
@@ -73,30 +74,32 @@ function PoemList({ poems, handleDelete, handleReorder }) {
                   onDragEnd={handleDragEnd}
                   onDragOver={e => e.preventDefault()}
                 >
-                  <div className="book-inner relative w-full h-full">
+                  <div key={`inner-${poem.id}`} className="book-inner relative w-full h-full">
                     {/* Book Cover */}
-                    <div className="book-cover absolute inset-0 w-full h-full origin-left aspect-[3/4] flex items-stretch justify-stretch bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl overflow-hidden">
+                    <div key={`cover-${poem.id}`} className="book-cover absolute inset-0 w-full h-full origin-left aspect-[3/4] flex items-stretch justify-stretch bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl overflow-hidden">
                       {poem.image ? (
                         <img 
+                          key={`img-${poem.id}`}
                           src={poem.image} 
                           alt="Book cover" 
                           className="w-full h-full object-cover" 
                           style={{ aspectRatio: '3/4', backgroundColor: '#fbeff4' }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-pink-50 rounded-xl border border-pink-100" style={{ aspectRatio: '3/4' }}>
+                        <div key={`placeholder-${poem.id}`} className="w-full h-full flex items-center justify-center bg-pink-50 rounded-xl border border-pink-100" style={{ aspectRatio: '3/4' }}>
                           <h2 className="text-2xl font-semibold font-title text-pink-700 text-center px-4">{poem.title}</h2>
                         </div>
                       )}
                     </div>
 
                     {/* Book Content */}
-                    <div className="book-content absolute inset-0 w-full h-full bg-white rounded-xl p-8 flex flex-col">
+                    <div key={`content-${poem.id}`} className="book-content absolute inset-0 w-full h-full bg-white rounded-xl p-8 flex flex-col">
                       <h2 className="text-2xl font-semibold mb-4 font-title text-pink-700">{poem.title}</h2>
                       <p className="text-gray-500 text-sm mb-5 italic font-body">{poem.date}</p>
                       <p className="text-gray-700 whitespace-pre-line font-handwriting text-base line-clamp-5">{poem.content}</p>
                       
                       <button
+                        key={`delete-${poem.id}`}
                         className="peekaboo-x-btn"
                         title="Delete poem"
                         onClick={e => { e.preventDefault(); e.stopPropagation(); handleDelete(poem.id); }}
@@ -120,4 +123,4 @@ function PoemList({ poems, handleDelete, handleReorder }) {
   );
 }
 
-export default PoemList; 
+export default PoemList;
