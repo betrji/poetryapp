@@ -32,14 +32,3 @@ export interface FormData {
   content: string;
   image: string | null;
 }
-
-export interface StorageManager {
-  getItem: (key: string) => string | null;
-  setItem: (key: string, value: string) => void;
-  removeItem: (key: string) => void;
-}
-
-export const LOCAL_STORAGE_KEYS = {
-  POEMS: 'poems',
-  POEM_DRAFT: 'poemDraft'
-} as const;
