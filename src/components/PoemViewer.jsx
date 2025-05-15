@@ -3,8 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 function PoemViewer({ poems }) {
   const navigate = useNavigate();
   const { id } = useParams();
-  const poemIndex = poems.findIndex(p => p.id.toString() === id);
-  const poem = poems[poemIndex];
+  
+  // Guard against undefined id
+  if (!id) {
+    return (
+      <div className="max-w-3xl mx-auto p-8 text-center">
+        <h2 className="text-2xl font-title text-pink-700 mb-4">Poem not found</h2>
+        <button className="primary-action-btn" onClick={() => navigate('/')}>Back to List</button>
+      </div>
+    );
+  }
+
+  const poemIndex = poems.findIndex(p => p.id && p.id.toString() === id);
+  const poem = poemIndex !== -1 ? poems[poemIndex] : null;
   const prevPoem = poemIndex > 0 ? poems[poemIndex - 1] : null;
   const nextPoem = poemIndex < poems.length - 1 ? poems[poemIndex + 1] : null;
 
@@ -68,4 +79,4 @@ function PoemViewer({ poems }) {
   );
 }
 
-export default PoemViewer; 
+export default PoemViewer;
