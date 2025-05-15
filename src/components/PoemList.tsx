@@ -53,8 +53,8 @@ function PoemList({ poems, handleDelete, handleReorder }: PoemListProps) {
         </button>
       </div>
       <header className="text-center mb-16 fuji-header fade-in">
-        <h1 className="main-title">Adhi's Poetry</h1>
-        <p className="subtitle">A collection of thoughts and emotions captured in verse</p>
+        <h1 className="text-4xl font-bold mb-5 japanese-heading text-pink-800 font-heading">Adhi's Poetry</h1>
+        <p className="text-lg text-gray-600 mt-6 font-body">A collection of thoughts and emotions captured in verse</p>
       </header>
       
       <main className="pb-16">
