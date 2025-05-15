@@ -12,6 +12,7 @@ function PoemEditor() {
   });
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Load draft from localStorage on component mount
   useEffect(() => {
@@ -32,8 +33,10 @@ function PoemEditor() {
       const saveTimer = setTimeout(() => {
         localStorage.setItem('poemDraft', JSON.stringify(poem));
         setLastSaved(new Date().toLocaleTimeString());
+        setIsSaving(false);
       }, 2000);
       
+      setIsSaving(true);
       return () => clearTimeout(saveTimer);
     }
   }, [poem, autoSaveEnabled]);
@@ -54,7 +57,6 @@ function PoemEditor() {
   };
 
   const savePoem = () => {
-    // Load existing poems from localStorage
     let poems: Poem[] = [];
     try {
       const savedPoems = localStorage.getItem('poems');
@@ -65,7 +67,6 @@ function PoemEditor() {
       console.error('Error loading saved poems:', e);
     }
     
-    // Add the new poem with current date
     const newPoem: Poem = {
       ...poem,
       id: Date.now(),
@@ -77,14 +78,8 @@ function PoemEditor() {
     };
     
     poems.push(newPoem);
-    
-    // Save back to localStorage
     localStorage.setItem('poems', JSON.stringify(poems));
-    
-    // Clear draft
     localStorage.removeItem('poemDraft');
-    
-    // Navigate back to home
     navigate('/');
   };
 
@@ -97,84 +92,112 @@ function PoemEditor() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
-      <header className="text-center mb-6 fuji-header fade-in">
-        <h1 className="text-4xl font-bold mb-2 japanese-heading font-heading text-pink-800">Poem Editor</h1>
-        <p className="text-lg text-gray-600 mt-4 font-body">Create and edit your poems</p>
+    <div className="max-w-4xl mx-auto px-4">
+      <header className="text-center mb-8 fuji-header fade-in">
+        <h1 className="text-5xl font-bold mb-3 japanese-heading font-heading text-pink-800">
+          Poem Editor
+        </h1>
+        <p className="text-lg text-gray-600 mt-4 font-body">
+          Let your creativity flow freely in this beautiful space
+        </p>
       </header>
-      <form className="glassmorphic-card p-10 fade-in-delay-1 flex flex-col gap-7" style={{margin: '0 auto', maxWidth: 700}}>
-        <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <div className="flex-1 flex flex-col gap-3">
-            <label htmlFor="title" className="block text-pink-700 text-base font-medium font-heading">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={poem.title}
-              onChange={handleChange}
-              className="modern-input"
-              placeholder="Enter a title for your poem"
-              autoComplete="off"
-            />
+
+      <div className="glassmorphic-card p-10 fade-in-delay-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="relative">
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={poem.title}
+                onChange={handleChange}
+                className="modern-input peer"
+                placeholder=" "
+                autoComplete="off"
+              />
+              <label htmlFor="title" className="modern-label">
+                Title your masterpiece
+              </label>
+            </div>
+
+            <div className="relative">
+              <textarea
+                id="content"
+                name="content"
+                value={poem.content}
+                onChange={handleChange}
+                rows={12}
+                className="modern-input peer min-h-[300px] resize-none"
+                placeholder=" "
+              ></textarea>
+              <label htmlFor="content" className="modern-label">
+                Write your poem
+              </label>
+            </div>
           </div>
-          <div className="flex-1 flex flex-col gap-3">
-            <label htmlFor="content" className="block text-pink-700 text-base font-medium font-heading">Your Poem</label>
-            <textarea
-              id="content"
-              name="content"
-              value={poem.content}
-              onChange={handleChange}
-              rows={8}
-              className="modern-input min-h-[120px] resize-vertical"
-              placeholder="Express your thoughts and feelings through poetry..."
-            ></textarea>
+
+          <div className="space-y-6">
+            <div className="bg-white/40 rounded-2xl p-6 shadow-inner">
+              <ImageCapture 
+                onImageCapture={handleImageCapture} 
+                initialImage={poem.image} 
+              />
+            </div>
+
+            <div className="bg-white/40 rounded-2xl p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox"
+                    checked={autoSaveEnabled}
+                    onChange={() => setAutoSaveEnabled(!autoSaveEnabled)}
+                    className="sr-only peer"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                  <span className="ms-3 text-sm font-medium text-gray-600 font-body">Auto-save</span>
+                </label>
+                {isSaving && (
+                  <span className="text-sm text-pink-600 animate-pulse">Saving...</span>
+                )}
+              </div>
+              
+              {lastSaved && (
+                <p className="text-sm text-gray-500 font-body">
+                  Last saved: {lastSaved}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row gap-6 items-center">
-          <div className="flex-1 flex flex-col items-center">
-            <ImageCapture onImageCapture={handleImageCapture} initialImage={poem.image} />
-          </div>
-          <div className="flex-1 flex flex-col gap-2">
-            <label className="inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox"
-                checked={autoSaveEnabled}
-                onChange={() => setAutoSaveEnabled(!autoSaveEnabled)}
-                className="sr-only peer"
-              />
-              <div className="relative w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-500"></div>
-              <span className="ms-2 text-sm font-medium text-gray-600 font-body">Auto-save</span>
-            </label>
-            {lastSaved && (
-              <span className="text-xs text-gray-500 italic font-body">Last saved: {lastSaved}</span>
-            )}
-            <button 
-              onClick={clearDraft}
-              className="primary-action-btn text-base mt-2"
+
+        <div className="flex justify-between mt-8 pt-6 border-t border-pink-100">
+          <div className="space-x-4">
+            <button
+              onClick={() => navigate('/')}
+              className="modern-action-btn bg-white text-pink-500 border-pink-200 hover:bg-pink-50"
               type="button"
             >
-              Clear draft
+              Cancel
+            </button>
+            <button
+              onClick={clearDraft}
+              className="modern-action-btn bg-white text-pink-500 border-pink-200 hover:bg-pink-50"
+              type="button"
+            >
+              Clear Draft
             </button>
           </div>
-        </div>
-        <div className="flex justify-between gap-4 mt-4">
-          <button
-            onClick={() => navigate('/')}
-            className="primary-action-btn text-base"
-            type="button"
-          >
-            Cancel
-          </button>
           <button 
             onClick={savePoem}
             disabled={!poem.title || !poem.content}
-            className="primary-action-btn text-base"
+            className="modern-action-btn bg-pink-500 text-white border-pink-500 hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
             type="button"
           >
             Save Poem
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
