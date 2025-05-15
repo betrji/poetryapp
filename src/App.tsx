@@ -12,7 +12,6 @@ import type { Poem } from './types'
 function App() {
   const [poems, setPoems] = useState<Poem[]>([]);
 
-  // Load poems from localStorage on mount
   useEffect(() => {
     const loadPoems = () => {
       try {
@@ -29,13 +28,10 @@ function App() {
     };
 
     loadPoems();
-
-    // Set up an event listener to reload poems when localStorage changes
     window.addEventListener('storage', loadPoems);
     return () => window.removeEventListener('storage', loadPoems);
   }, []);
 
-  // Import Google Fonts
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
