@@ -1,1 +1,0 @@
-export { default as PoemCard } from './PoemCard';
