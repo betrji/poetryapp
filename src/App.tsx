@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import PoemList from './components/PoemList.tsx'
-import NewPoem from './components/NewPoem.tsx'
-import PoemEditor from './components/PoemEditor.tsx'
-import CherryBlossoms from './components/CherryBlossoms.tsx'
+import PoemList from './components/PoemList'
+import NewPoem from './components/NewPoem'
+import PoemEditor from './components/PoemEditor'
+import CherryBlossoms from './components/CherryBlossoms'
 import './styles/JapaneseTheme.css'
-import PoemViewer from './components/PoemViewer.tsx'
+import PoemViewer from './components/PoemViewer'
+import type { Poem } from './types'
 
 function App() {
   const [poems, setPoems] = useState<Poem[]>([]);
@@ -68,7 +69,6 @@ function App() {
     }
   };
 
-  // Delete poem at the App level
   const handleDeletePoem = (id: number) => {
     const updatedPoems = poems.filter(poem => poem.id !== id);
     setPoems(updatedPoems);
@@ -79,7 +79,6 @@ function App() {
     }
   };
 
-  // Reorder poems and persist
   const handleReorderPoems = (newOrder: Poem[]) => {
     setPoems(newOrder);
     try {

@@ -14,8 +14,8 @@ function PoemViewer({ poems }: PoemViewerProps) {
     );
   }
 
-  const poemIndex = poems.findIndex(p => p.id && p.id.toString() === id);
-  const poem = poemIndex !== -1 ? poems[poemIndex] : null;
+  const poemIndex = poems.findIndex(p => p.id.toString() === id);
+  const poem = poems[poemIndex];
   const prevPoem = poemIndex > 0 ? poems[poemIndex - 1] : null;
   const nextPoem = poemIndex < poems.length - 1 ? poems[poemIndex + 1] : null;
 
